@@ -15,6 +15,11 @@ int main() {
     } else {
         std::cout << "Переменная a: менее трех\n";
     }
+    switch(a) {
+        case 5:
+            short s = 0;
+        _default: 
+    }
 
 
     return 0;
