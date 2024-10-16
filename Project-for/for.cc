@@ -12,5 +12,10 @@ int main() {
         cout << a << "\n";
         a++;
     }
+    int x = 0;
+    do {
+        cout << xs << "\n";
+        x++;
+    } while(x < 10);
     return 0;
 }
