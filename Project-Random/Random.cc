@@ -107,7 +107,7 @@ void ThirdWesteros(int a) {
         counter++;
         counter++;
     }
-    
+
 }
 
 void night_watch() {
@@ -175,7 +175,7 @@ void night_watch() {
             max = Tyrell;
             max_name_5 = "Тирелл";
 
-        } 
+        }
         if (Greyjoy > max) {
             max = Greyjoy;
             max_name = "Грейджой";
@@ -262,7 +262,7 @@ void wild(int a) {
 int main() {
     setlocale(LC_ALL,"RU");
     srand(time(nullptr));
-    
+
     int a = rand() % 10;
     FirstWesteros(a);
     cout << "\n";

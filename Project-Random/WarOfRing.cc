@@ -1,8 +1,9 @@
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
 #include <map>
-#include <algorithm>
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -10,21 +11,32 @@ using json = nlohmann::json;
 int main(int argc, char** argv) {
     srand(time(NULL));
 
-    if (argc != 4) {
-        std::cout << argv[0] << " <json_file> <id> <log>" << std::endl;
+    if (argc != 2) {
+        std::cout << argv[0] << " <config>" << std::endl;
         return 1;
     }
 
-    std::string filename = argv[1];
-    int count_desk = std::stoi((std::string) argv[2]);
+    // get config
 
-    std::string log_filename = argv[3];
+    std::string config_filename = argv[1];
+    std::ifstream config_file(config_filename);
+    json config_data = json::parse(config_file);
 
-    std::ifstream file(filename);
-    json data = json::parse(file);
+    std::map<std::string, std::string> parsed_config = config_data;
 
-    std::vector<std::map<std::string, std::string>> parsed_data = data[count_desk];
+    // get data from config
+    std::string data_filename = parsed_config["data_file"];
+    int desk_id = std::stoi(parsed_config["id"]);
+    std::string log_filename = parsed_config["log_file"];
 
+    // get desk file
+    std::ifstream data_file(data_filename);
+    json data = json::parse(data_file);
+
+    // parse it
+    std::vector<std::map<std::string, std::string>> parsed_data = data[desk_id];
+
+    // read logs
     std::ifstream log_file(log_filename);
 
     std::string line;
@@ -49,10 +61,13 @@ int main(int argc, char** argv) {
         std::string battle_title = parsed_data[id]["battle_title"];
         std::string battle_text = parsed_data[id]["battle_text"];
 
+        std::string type = parsed_data[id]["type"];
+
         std::cout << "Title: " << title << std::endl;
         std::cout << "Text: " << text << std::endl;
         std::cout << "Battle title: " << battle_title << std::endl;
         std::cout << "Battle text: " << battle_text << std::endl;
+        std::cout << "Type: " << type << std::endl;
 
         std::ofstream log_file(log_filename, std::ios::app);
         log_file << title << "\n";
@@ -60,7 +75,8 @@ int main(int argc, char** argv) {
 
         parsed_data.erase(parsed_data.begin() + id);
 
-        std::cin.get();
+        std::string discard;
+        std::getline(std::cin, discard);
     }
 
     return 0;
